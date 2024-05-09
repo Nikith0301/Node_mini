@@ -11,7 +11,7 @@ const Location = require('./models/Location')
 
 const app=express()
 app.use(cors())
-// app.use(express.json())
+app.use(express.json())
 const tasks=require('./routes/rout_tasks.js')
 
 
@@ -35,6 +35,8 @@ app.get('/home',(req,res)=>{
 })
 
 app.use('/api/v1/tasks',tasks)
+
+
 app.use(bodyParser.json())
 app.post('/api/location', (req, res) => {
     const { latitude, longitude,accuracy } = req.body; // Access location data from request body

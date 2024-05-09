@@ -10,8 +10,8 @@ function App() {
 
   return (
     <>
-    {/* <Todo/> */}
-    <Geo/>
+    <Todo/>
+    {/* <Geo/> */}
     </>
   )
 }

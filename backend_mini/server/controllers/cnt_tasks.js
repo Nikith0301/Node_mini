@@ -80,10 +80,16 @@ catch(e){
 
 const getAllTasks =async (req,res)=>{
 
-     let tasks=await Task.find({})
-     res.status(200).json({ tasks })
+  try{ 
+    let tasks=await Task.find({})
+  // res.send('getting all tasks')
+  res.status(200).json({ tasks })
+}
+catch(e){
+  res.send(e);
+}    
 
-res.send('getting all tasks')
+
 }
 
 

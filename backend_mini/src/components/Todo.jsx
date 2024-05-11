@@ -50,11 +50,15 @@
 import {useState,useReducer} from "react" ;
 import TaskBox from "./TaskBox.jsx";
 import "./Todo.css"
+import axios from 'axios';
+
 const initialTasks = [
   {id: 0, text: 'Visit Kafka Museum', done: true},
   {id: 1, text: 'Watch a puppet show', done: false},
   {id: 2, text: 'Lennon Wall pic', done: false},
 ];
+
+
 
 
 export default function Todo(){
@@ -93,6 +97,21 @@ function taskReducer(works,action){
 const [inputText,setInputText]=useState('');
 
 const[works,dispatch]=useReducer(taskReducer,initialTasks)
+
+
+
+async function  handleFetch(){
+  let res=await axios.get(`http://localhost:3002/api/v1/tasks/`)
+console.log('HereComes the data')
+const tasks=res.data.tasks
+// console.log(tasks)
+for (let key in tasks){
+  console.log(tasks[key].name)
+dispatch({type:'added',id:nextId++,text:tasks[key].name})
+}
+
+
+}
 
 function handleEdit(task){
 
@@ -137,6 +156,7 @@ function handleInputChange(e){
     <h1>Enter tasks here</h1>
     <input placeholder="text"  value={inputText} onChange={handleInputChange}/>
     <button onClick={handeleWork}>Add</button>
+    <button onClick={handleFetch}>Fetch</button>
     
  <TaskBox works={works} handleDelete={handleDelete} handleEdit={handleEdit}/>
      

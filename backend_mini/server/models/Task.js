@@ -8,6 +8,7 @@
 const mongoose = require('mongoose')
 
 const TaskSchema = new mongoose.Schema({
+  id:{type:String},
   name: {
     type: String,
     required: [true, 'must provide name'],

@@ -29,7 +29,7 @@ function Task({ task, text, id, handleDelete, handleEdit }) {
     Content = (
       <>
         <input
-          value={task.text}
+          value={task.name||task.text}
           onChange={(event) =>
             handleEdit({ ...task, text: event.target.value })
           }
@@ -47,7 +47,7 @@ function Task({ task, text, id, handleDelete, handleEdit }) {
   } else {
     Content = (
       <>
-        {task.text}
+        {task.text||task.name}
 
         <button
           onClick={() => {

@@ -1,57 +1,8 @@
-// import { useState } from 'react';
-// import AddTask from './AddTask.js';
-// import TaskList from './TaskList.js';
-
-// export default function TaskApp() {
-//   const [tasks, setTasks] = useState(initialTasks);
-
-//   function handleAddTask(text) {
-//     setTasks([
-//       ...tasks,
-//       {
-//         id: nextId++,
-//         text: text,
-//         done: false,
-//       },
-//     ]);
-//   }
-
-//   function handleChangeTask(task) {
-//     setTasks(
-//       tasks.map((t) => {
-//         if (t.id === task.id) {
-//           return task;
-//         } else {
-//           return t;
-//         }
-//       })
-//     );
-//   }
-
-//   function handleDeleteTask(taskId) {
-//     setTasks(tasks.filter((t) => t.id !== taskId));
-//   }
-
-//   return (
-//     <>
-//       <h1>Prague itinerary</h1>
-//       <AddTask onAddTask={handleAddTask} />
-//       <TaskList
-//         tasks={tasks}
-//         onChangeTask={handleChangeTask}
-//         onDeleteTask={handleDeleteTask}
-//       />
-//     </>
-//   );
-// }
-
-// let nextId = 3;
-
 import {useState,useReducer} from "react" ;
 import TaskBox from "./TaskBox.jsx";
 import "./Todo.css"
 import axios from 'axios';
-
+import {  v4 as uuid }  from 'uuid';
 const initialTasks = [
   {id: 0, text: 'Visit Kafka Museum', done: true},
   {id: 1, text: 'Watch a puppet show', done: false},
@@ -64,15 +15,22 @@ const initialTasks = [
 export default function Todo(){
 
 
-// const [works,setWork]=useState( [{id: 0, text: 'Visit Kafka Museum', done: true},
-// {id: 1, text: 'Watch a puppet show', done: false},
-// {id: 2, text: 'Lennon Wall pic', done: false}]);
+
 
 function taskReducer(works,action){
 
   switch(action.type){
 
-    case 'added':{return [...works,{id:action.id,text:action.text,done:false}]}
+
+    case 'fetch':{
+      console.log('fetching',action.tasks)
+      
+      return action.tasks
+    }
+    case 'added':{
+      console.log('posting')
+      axios.post('http://localhost:3002/api/v1/tasks/',{id:action.id,name:action.text,completed:false})//completed || done means same
+      return [...works,{id:action.id,text:action.text,done:false}]}
 
     case 'changed':{
       return works.map((w)=>{
@@ -85,7 +43,9 @@ function taskReducer(works,action){
       } )
     }
 
-    case 'deleted':{return works.filter(w=>w.id!==action.id)}
+    case 'deleted':{
+      axios.delete(`http://localhost:3002/api/v1/tasks/${action.id}`,)
+      return works.filter(w=>w.id!==action.id)}
     default: {
       throw Error('Unknown action: ' + action.type);
     }
@@ -104,10 +64,11 @@ async function  handleFetch(){
   let res=await axios.get(`http://localhost:3002/api/v1/tasks/`)
 console.log('HereComes the data')
 const tasks=res.data.tasks
+dispatch({type:'fetch',tasks})
 // console.log(tasks)
 for (let key in tasks){
   console.log(tasks[key].name)
-dispatch({type:'added',id:nextId++,text:tasks[key].name})
+
 }
 
 
@@ -138,7 +99,10 @@ function handleDelete(WorkId){
   function handeleWork(){
     if(inputText.trim()){
       // setWork([...works,{id:nextId++,text:inputText,done:false}])
-      dispatch({type:'added',id:nextId++,text:inputText})
+      const randomUUID = uuid();
+      // dispatch({type:'added',id:nextId++,text:inputText})
+
+      dispatch({type:'added',id:randomUUID,text:inputText})
     }
 
     

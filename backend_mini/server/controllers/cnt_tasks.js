@@ -4,9 +4,16 @@ const Location = require('../models/Location')
 
 
 const createTask=async (req,res)=>{
+console.log(req.body)
+    // var stat=  new Task({
+    //   id:111,
+    //     name:"dont Watch ",
+    //     completed:false
+    //     })
 
     var stat=  new Task({
-        name:"Force yash to do work",
+      id:req.body.id,
+        name:req.body.name,
         completed:false
         })
 
@@ -16,8 +23,8 @@ const createTask=async (req,res)=>{
 //       or
 
 // var task=await Task.create(req.body);
-// res.status(200).json({task})
-// res.send('sending all tasks')
+// res.status(200).json({stat})
+res.send('posting tasks')
 
 
 }
@@ -39,7 +46,7 @@ const getTask= async(req,res)=>{
 
 
     if(!task){
-        return res.status(404).json({msg:`No such task with id :${taskID}`})
+        return res.status(404).json({msg:`No such task with id :${task}`})
     }
 
     
@@ -60,7 +67,8 @@ const deleteTask=async (req,res)=>{
 try{
     // const {id:taskID}=req.params;
     // const task=await Task.findOne({_id:req.params.id})
-    const task= await Task.findOneAndDelete({_id:req.params.id})
+    // const task= await Task.findOneAndDelete({_id:req.params.id})//working one
+    const task= await Task.findOneAndDelete({id:req.params.id})
     if (!task) {//if task does not exist
       console.log('No such id found',req.params.id)
     }
